@@ -1,4 +1,5 @@
 let translations = {};
+let singleLine = false;
 
 $(document).ready(function () {
 	$("#fileUploader").change(function (evt) {
@@ -29,7 +30,7 @@ function workbook_to_object(doc) {
 		const val = line['NL'];
 		let o = translations;
 		keyChain.forEach(key => {
-			if (key === keyChain[keyChain.length-1]){
+			if (key === keyChain[keyChain.length - 1]) {
 				o[key] = val;
 			} else {
 				if (!o[key]) {
@@ -42,12 +43,37 @@ function workbook_to_object(doc) {
 	console.log(translations);
 
 	translations = sortObjectKeys(translations);
-	document.getElementById("jsonObject").innerHTML = JSON.stringify(translations, null, 4);
+	document.getElementById("jsonObject").innerHTML = objToHTML(translations);
 }
 
-const sortObjectKeys = obj => Object.keys(obj)
-		.sort()
-		.reduce((acc, key) => {
-			acc[key] = obj[key];
-			return acc
-		}, {});
+
+function sortObjectKeys(obj) {
+	return Object.keys(obj).sort().reduce((acc, key) => {
+		acc[key] = obj[key];
+		return acc
+	}, {});
+}
+
+function sortKeys() {
+
+}
+
+function objToHTML(obj, sp = 0) {
+	let string = '';
+	if (typeof obj == 'string') {
+		return `"${obj}"`
+	} else if (typeof obj == 'object') {
+		string += singleLine ? `{<br>${'&emsp;'.repeat(sp)}` : '{';
+		let keys = Object.keys(obj);
+		for (let [key, val] of Object.entries(obj)) {
+			string += key + ': ';
+			keys.shift();
+			string += objToHTML(val, sp + 1);
+			const last = keys.length === 0;
+			string += singleLine ? `${last ? '' : ','}<br>${'&emsp;'.repeat(sp)}` : '}';
+		}
+		string += '}';
+	}
+	return string;
+}
+
