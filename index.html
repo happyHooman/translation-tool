@@ -9,12 +9,30 @@
 </head>
 
 <body>
-    <input type="file" id="fileUploader" name="fileUploader" accept=".xls, .xlsx"/>
+    <div id="settings">
+        <input type="file" id="fileUploader" name="fileUploader" accept=".xls, .xlsx"/>
+        <br><br>
+        <label for="indentation">Indentation:</label>
+        <input type="checkbox" onchange="indentation = !indentation" id="indentation">
+        <br>
+        <label for="keys_column">Keys column:</label>
+        <select name="keys_column" id="keys_column">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <br>
+        <label for="translations_column">Translations Column</label>
+        <select name="translations_column" id="translations_column">
+            <option value="1">1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+        </select>
+        <br>
+        <button>Create</button>
+    </div>
     <br><br>
-    <label for="single_line">Single line:</label>
-    <input type="checkbox" onchange="singleLine = !singleLine" id="single_line">
-    <br><br>
-    <label id="jsonObject"> JSON : </label>
+    <div id="jsonObject"> JSON : </div>
 </body>
 
 

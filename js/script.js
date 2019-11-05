@@ -1,5 +1,5 @@
 let translations = {};
-let singleLine = false;
+let indentation = false;
 
 $(document).ready(function () {
 	$("#fileUploader").change(function (evt) {
@@ -13,6 +13,7 @@ $(document).ready(function () {
 			workbook.SheetNames.forEach(function (sheetName) {
 				const XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
 				workbook_to_object(XL_row_object);
+				addColumnOptions(Object.keys(XL_row_object[0]));
 			})
 		};
 
@@ -40,9 +41,8 @@ function workbook_to_object(doc) {
 			}
 		});
 	});
-	console.log(translations);
 
-	translations = sortObjectKeys(translations);
+	translations = sortKeys(translations);
 	document.getElementById("jsonObject").innerHTML = objToHTML(translations);
 }
 
@@ -54,26 +54,50 @@ function sortObjectKeys(obj) {
 	}, {});
 }
 
-function sortKeys() {
-
+function sortKeys(obj) {
+	if (typeof obj == 'object') {
+		obj = sortObjectKeys(obj);
+		for (let [key, val] of Object.entries(obj)) {
+			if (typeof val == 'object') {
+				obj[key] = sortKeys(val)
+			}
+		}
+	}
+	return obj
 }
 
 function objToHTML(obj, sp = 0) {
 	let string = '';
 	if (typeof obj == 'string') {
-		return `"${obj}"`
+		return indentation ? `<span style="color: green">"${obj}"</span>` : `"${obj}"`
+	} else if (typeof obj == 'number') {
+		return obj
 	} else if (typeof obj == 'object') {
-		string += singleLine ? `{<br>${'&emsp;'.repeat(sp)}` : '{';
+		string += indentation ? `{<br>${'&emsp;'.repeat(sp)}` : '{';
 		let keys = Object.keys(obj);
 		for (let [key, val] of Object.entries(obj)) {
-			string += key + ': ';
+			string += indentation ? `<span style="color: blue">${key}</span>: ` : key + ': ';
 			keys.shift();
 			string += objToHTML(val, sp + 1);
 			const last = keys.length === 0;
-			string += singleLine ? `${last ? '' : ','}<br>${'&emsp;'.repeat(sp)}` : '}';
+			string += indentation ? `${last ? '' : ','}<br>${'&emsp;'.repeat(sp)}` : `${last ? '' : ', '}`;
 		}
 		string += '}';
 	}
 	return string;
 }
 
+function htmlOptions(keys) {
+	let html = '';
+	for (let k in keys) {
+		html += `<option value="${k}">${k}</option>`
+	}
+	return html
+}
+
+function addColumnOptions(keys) {
+	const options = htmlOptions(keys);
+	console.log(options);
+	document.getElementById('keys_column').innerHTML = options;
+	document.getElementById('translations_column').innerHTML = options;
+}
