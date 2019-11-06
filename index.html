@@ -5,34 +5,69 @@
 <head>
     <script src="js/jquery.js"> </script>
     <script lang="javascript" src="js/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
     <script src="js/script.js"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        body {
+            padding: 20px;
+        }
+
+        h1 {
+            color: blue;
+        }
+
+        p {
+            color: red;
+        }
+        .object_key {
+            color: blue;
+        }
+        .object_value {
+            color: green
+        }
+        #settings {
+            width: 500px;
+        }
+        .select-label{
+            margin-top: 10px;
+            margin-bottom: 0;
+        }
+        .btn {
+            margin-top: 15px;
+        }
+    </style>
 </head>
 
 <body>
     <div id="settings">
-        <input type="file" id="fileUploader" name="fileUploader" accept=".xls, .xlsx"/>
-        <br><br>
-        <label for="indentation">Indentation:</label>
-        <input type="checkbox" onchange="indentation = !indentation" id="indentation">
+        <div class="input-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputFile">Upload</span>
+            </div>
+            <div class="custom-file">
+                <input type="file" class="custom-file-input" id="fileUploader"
+                       aria-describedby="inputFile" accept=".xls, .xlsx"/>
+                <label class="custom-file-label" for="fileUploader">Choose file</label>
+            </div>
+        </div>
         <br>
-        <label for="keys_column">Keys column:</label>
-        <select name="keys_column" id="keys_column">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-        <br>
-        <label for="translations_column">Translations Column</label>
-        <select name="translations_column" id="translations_column">
-            <option value="1">1</option>
-            <option value="2">2</option>
-            <option value="3">3</option>
-        </select>
-        <br>
-        <button>Create</button>
+        <div class="custom-control custom-checkbox">
+            <input type="checkbox" class="custom-control-input" id="indentation" onchange="indentation = !indentation">
+            <label class="custom-control-label" for="indentation">Indentation</label>
+        </div>
+
+        <label for="keys_column" class="select-label">Keys column</label>
+        <select class="browser-default custom-select"
+                id="keys_column" onchange="updateChoice(this)" disabled></select>
+        <label for="translations_column" class="select-label">Translations column</label>
+        <select class="browser-default custom-select"
+                id="translations_column" onchange="updateChoice(this)" disabled></select>
+
+        <button type="button" class="btn btn-primary" id="generateJS" disabled>Generate JS Object</button>
     </div>
     <br><br>
-    <div id="jsonObject"> JSON : </div>
+    <div id="jsonObject"> JS Object : </div>
 </body>
 
 
