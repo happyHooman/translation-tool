@@ -1,4 +1,3 @@
-let translations = {};
 let indentation = false;
 let keysColumn, translationsColumn;
 
@@ -42,6 +41,7 @@ $(document).ready(function () {
 });
 
 function workbook_to_object(doc) {
+	let translations = {};
 	doc.forEach(line => {
 		const keyChain = line[keysColumn].split('.');
 		const val = line[translationsColumn];
