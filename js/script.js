@@ -15,7 +15,9 @@ $(document).ready(function () {
 			workbook.SheetNames.forEach(function (sheetName) {
 				const XL_row_object = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName]);
 				addColumnOptions(Object.keys(XL_row_object[0]));
-				keysColumn = translationsColumn = Object.keys(XL_row_object[0])[0];
+
+				if (!keysColumn && !translationsColumn)
+					keysColumn = translationsColumn = Object.keys(XL_row_object[0])[0];
 
 				document.getElementById('keys_column').disabled = false;
 				document.getElementById('translations_column').disabled = false;
@@ -41,6 +43,10 @@ $(document).ready(function () {
 });
 
 function workbook_to_object(doc) {
+	// Is it the wrong sheet?
+	if (typeof doc[0][keysColumn] == 'undefined' || typeof doc[0][translationsColumn] == 'undefined')
+		return;
+
 	let translations = {};
 	doc.forEach(line => {
 		const keyChain = line[keysColumn].split('.');
