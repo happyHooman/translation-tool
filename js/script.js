@@ -52,12 +52,12 @@ function workbook_to_object(doc) {
 		const keyChain = line[keysColumn].split('.');
 		const val = line[translationsColumn];
 		let o = translations;
-		keyChain.forEach(key => {
+		keyChain.forEach((key, index) => {
 			key = key.replace(/\s/g, '');
 			if (key.length === 0) {
 				return
 			}
-			if (key === keyChain[keyChain.length - 1]) {
+			if (index === keyChain.length - 1) {
 				o[key] = val;
 			} else {
 				if (!o[key]) {
